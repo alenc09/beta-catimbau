@@ -1,23 +1,18 @@
 # Tue Oct 08 14:01:57 2019 ------------------------------
-# Script final das an?lises de comunidades de herb?ceas e lenhosas
+# Script para importar e organizar os dados necessários para as análises
 
 
 #libraries####
 library(readxl)
 library(geosphere)
 library(vegan)
-library(betapart)
-library(dplyr)
-library(tidyr)
-library(ggplot2)
-library(reshape)
+
 
 #data####
-plot<- read_xlsx("exp_pp_sem_P7.xlsx")
-herb<- read_xlsx("herb?ceas_pp.xlsx")
-len<- read_xlsx("lenhosas_pp.xlsx")
+read_xlsx("exp_pp_sem_P7.xlsx")-> plot
+read_xlsx("herbáceas_pp.xlsx") -> herb
+read_xlsx("lenhosas_pp.xlsx") -> len
 
-#data exploration####
 
 #PCNMs####
 mat_dist<- distm(plot[,c('lon','lat')], plot[,c('lon','lat')], fun=distVincentyEllipsoid)
@@ -25,98 +20,25 @@ pcnms<- pcnm(mat_dist)
 plot_pcnm<- cbind(plot, pcnms$vectors)
 
 #data transformation####
-plot_pcnm_transf<- decostand(plot_pcnm[, -c(1:3)], 'standardize')
-herb_abund_hell<- decostand(herb[,-c(1,59)], 'hellinger')
-len_abund_hell<- decostand(len[-3,-1], 'hellinger')
+decostand(plot_pcnm[, -c(1:3)], 'standardize') -> plot_pcnm_transf #Faz sentido padronizar as PCNM's? Elas não perderiam a representação da variação espacial dessa forma?
+decostand(herb[,-c(1,59)], 'hellinger')-> herb_abund_hell
+decostand(len[-3,-1], 'hellinger') -> len_abund_hell
 
-#RDA Models####
-#Herb?ceas - RDA
-modT_herb_abund<- rda(herb_abund_hell ~ PPI + LPI + prec + fert_sol + PCNM1 + PCNM3 +
-                     PCNM4 + PCNM5 + PCNM6 + PCNM7 + PCNM8 + PCNM9 + PCNM10 + PCNM11,
-                     data = plot_pcnm_transf)
-vif.cca(modT_herb_abund)
-set.seed(123)
-modT_herb_abund<- ordistep(cca(herb_abund_hell~1, plot_pcnm_transf), scope = formula(modT_herb_abund),
-                       direction = 'both', pstep=1000)
-mod_herb_abund<- rda(herb_abund_hell ~ prec + PCNM3, data = plot_pcnm_transf)
-anova(mod_herb_abund)
-RsquareAdj(mod_herb_abund)
+##Herb - dbRDA data----
+beta.pair.abund(herb_abund_hell) -> herb.pair.abund
+herb.pair.abund$beta.bray -> herb.abund.tot
+herb.pair.abund$beta.bray.bal -> herb.abund.tu
+herb.pair.abund$beta.bray.gra -> herb.abund.ne
 
-#Herb?ceas - dbRDA####
-herb.pair.abund<- beta.pair.abund(herb_abund_hell)
-herb.abund.tot<- herb.pair.abund$beta.bray
-herb.abund.tu<- herb.pair.abund$beta.bray.bal
-herb.abund.ne<- herb.pair.abund$beta.bray.gra
-set.seed(123)
-modT.abund.herb<- rda(herb_abund_hell ~ ., plot_pcnm_transf)
-vif.cca(modT.abund.herb)
-modT2.abund.herb<- rda(herb_abund_hell ~ LPI + WEI + prec + fert_sol + PCNM1 + PCNM3 +
-                         PCNM4 + PCNM5 + PCNM6 + PCNM7 + PCNM8 + PCNM9 + PCNM10 + PCNM11,
-                       data = plot_pcnm_transf)
-vif.cca(modT2.abund.herb)
-
-ordistep(capscale(herb.abund.tot~1, plot_pcnm_transf), scope = formula(modT2.abund.herb),
-         direction = 'both', pstep=1000)
-mod.herb.abund.tot<- capscale(herb.abund.tot ~ PCNM3 + LPI + prec + PCNM1 + PCNM10, plot_pcnm_transf)
-anova(mod.herb.abund.tot)
-RsquareAdj(mod.herb.abund.tot)
-plot(mod.herb.abund.tot)
-summary(mod.herb.abund.tot)
-
-ordistep(capscale(herb.abund.tu~1, plot_pcnm_transf), scope = formula(modT2.abund.herb),
-         direction = 'both', pstep=1000)
-mod.herb.abund.tu<- capscale(herb.abund.tu ~ PCNM3 + LPI + prec + PCNM1, plot_pcnm_transf)
-anova(mod.herb.abund.tu)
-anova(mod.herb.abund.tu, by = "axis")
-RsquareAdj(mod.herb.abund.tu)
-plot(mod.herb.abund.tu)
-summary(mod.herb.abund.tu)
-
-ordistep(capscale(herb.abund.ne~1, plot_pcnm_transf), scope = formula(modT2.abund.herb),
-         direction = 'both', pstep=1000)
-mod.herb.abund.ne<- capscale(herb.abund.ne ~ PCNM7 + PCNM3, plot_pcnm_transf)
-anova(mod.herb.abund.ne)
-RsquareAdj(mod.herb.abund.ne)
-plot(mod.herb.abund.ne)
-summary(mod.herb.abund.ne)
-
-#Lenhosas -  RDA
-modT_len_abund<- rda(len_abund_hell ~ LPI + WEI + prec + fert_sol + PCNM1 + PCNM3 +
-                        PCNM4 + PCNM5 + PCNM6 + PCNM7 + PCNM8 + PCNM9 + PCNM10 + PCNM11,
-                      data = plot_pcnm_transf)
-vif.cca(modT_len_abund)
-set.seed(123)
-mod_len_abund<- ordistep(cca(len_abund_hell~1, plot_pcnm_transf), scope = formula(modT_len_abund),
-                          direction = 'both', pstep=1000)
-mod_alh<- rda(len_abund_hell ~ PCNM1 + prec, plot_pcnm_transf)
-anova(mod_alh)
-RsquareAdj(mod_alh)
-
-#Lenhosas - dbRDA
-len.pair.abund<- beta.pair.abund(len_abund_hell)
-len.abund.tot<- len.pair.abund$beta.bray
-len.abund.tu<- len.pair.abund$beta.bray.bal
-len.abund.ne<- len.pair.abund$beta.bray.gra
-
-modT.abund.len<- rda(len_abund_hell ~ ., plot_pcnm_transf)
-vif.cca(modT.abund.len)
-modT2.abund.len<- rda(len_abund_hell ~ LPI + WEI + prec + fert_sol + PCNM1 + PCNM3 +
-                         PCNM4 + PCNM5 + PCNM6 + PCNM7 + PCNM8 + PCNM9 + PCNM10 + PCNM11,
-                       data = plot_pcnm_transf)
-vif.cca(modT2.abund.len)
+##Lenhosas - dbRDA data----
+beta.pair.abund(len_abund_hell) ->len.pair.abund
+len.pair.abund$beta.bray ->len.abund.tot
+len.pair.abund$beta.bray.bal -> len.abund.tu
+len.pair.abund$beta.bray.gra ->len.abund.ne
 
 
-ordistep(capscale(len.abund.tot~1, plot_pcnm_transf), scope = formula(modT2.abund.len),
-         direction = 'both', pstep=1000)
-mod.len.abund.tot<- capscale(len.abund.tot ~ prec + PCNM1, plot_pcnm_transf)
-anova(mod.len.abund.tot)
-RsquareAdj(mod.len.abund.tot)
 
-ordistep(capscale(len.abund.tu~1, plot_pcnm_transf), scope = formula(modT2.abund.len),
-         direction = 'both', pstep=1000)
-mod.len.abund.tu<- capscale(len.abund.tu ~ WEI + prec + PCNM1 + PCNM5, plot_pcnm_transf)
-anova(mod.len.abund.tu)
-RsquareAdj(mod.len.abund.tu)
+
 
 ordistep(capscale(len.abund.ne~1, plot_pcnm_transf), scope = formula(modT2.abund.len),
          direction = 'both', pstep=1000)
