@@ -37,73 +37,9 @@ len.pair.abund$beta.bray.bal -> len.abund.tu
 len.pair.abund$beta.bray.gra ->len.abund.ne
 
 
-
-
-
-ordistep(capscale(len.abund.ne~1, plot_pcnm_transf), scope = formula(modT2.abund.len),
-         direction = 'both', pstep=1000)
-mod.len.abund.ne<- capscale(len.abund.ne ~ PCNM3, plot_pcnm_transf)
-anova(mod.len.abund.ne)
-RsquareAdj(mod.len.abund.ne)
-
-
-#variation partitioning - Abundance####
-#herb?ceas
-
-varpart.abund.herb.rda<- varpart(herb_abund_hell, plot_pcnm_transf[,6], plot_pcnm_transf[, 10]) #herb.abund.tot ~ PCNM3 + LPI + prec + PCNM1 + PCNM10
-plot(varpart.abund.herb.rda)
-
-varpart.pa.herb.tot<- varpart(herb_abund_hell, plot_pcnm_transf[,6], plot_pcnm_transf[,c(8, 10, 12)]) #herb.abund.tot ~ PCNM3 + LPI + prec + PCNM1 + PCNM10
-plot(varpart.pa.herb.tot)
-
-anova(capscale(herb.abund.tot ~ PCNM3 + PCNM1 + PCNM10 + Condition(LPI + prec), data = plot_pcnm_transf))
-anova(capscale(herb.abund.tot ~ LPI  + Condition(PCNM3 + PCNM1 + PCNM10+ prec), data = plot_pcnm_transf))
-anova(capscale(herb.abund.tot ~ prec + Condition(PCNM3 + PCNM1 + PCNM10+ LPI), data = plot_pcnm_transf))
-varpart.abund.herb.tot<- varpart(herb_abund_hell, plot_pcnm_transf[,2], plot_pcnm_transf[,6], plot_pcnm_transf[,c(8, 10, 17)]) #herb.abund.tot ~ PCNM3 + LPI + prec + PCNM1 + PCNM10
-plot(varpart.abund.herb.tot)
-
-anova(capscale(herb.abund.tu ~ PCNM3 + PCNM1 + Condition(LPI + prec), data = plot_pcnm_transf))
-anova(capscale(herb.abund.tu ~ LPI  + Condition(PCNM3 + PCNM1+ prec), data = plot_pcnm_transf))
-anova(capscale(herb.abund.tu ~  prec + Condition(PCNM3 + PCNM1+ LPI), data = plot_pcnm_transf))
-varpart.abund.herb.tu<- varpart(herb_abund_hell, plot_pcnm_transf[,2], plot_pcnm_transf[,6], plot_pcnm_transf[,c(8, 10)]) #herb.abund.tu ~ PCNM3 + LPI + prec + PCNM1
-plot(varpart.abund.herb.tu)
-
-anova(capscale(herb.abund.ne ~ PCNM7 + PCNM3 + Condition(LPI + prec), data = plot_pcnm_transf))
-anova(capscale(herb.abund.ne ~ LPI + Condition(PCNM7 + PCNM3+ prec), data = plot_pcnm_transf))
-anova(capscale(herb.abund.ne ~ prec + Condition(LPI + PCNM7 + PCNM3), data = plot_pcnm_transf))
-varpart.abund.herb.ne<- varpart(herb_abund_hell, plot_pcnm_transf[,2], plot_pcnm_transf[,6], plot_pcnm_transf[,c(14, 10)]) #herb.abund.tu ~ PCNM3 + LPI + prec + PCNM1
-plot(varpart.abund.herb.ne)
-
-#varpart.abund.herb.ne<- not possible to do a partioning for it is explained only by geographic variation (PCNM7 + PCNM3)
-
 #Lenhosas
 
-varpart.pa.len.rda<- varpart(len.pah, plot_pcnm_transf[,c(3,6)], plot_pcnm_transf[, 8]) #herb.abund.tot ~ PCNM3 + LPI + prec + PCNM1 + PCNM10
-plot(varpart.pa.len.rda)
-varpart.abund.len.rda<- varpart(len_abund_hell, plot_pcnm_transf[,6], plot_pcnm_transf[, 8]) #herb.abund.tot ~ PCNM3 + LPI + prec + PCNM1 + PCNM10
-plot(varpart.abund.len.rda)
 
-varpart.pa.len.tot<- varpart(len.pa.tot, plot_pcnm_transf[,c(6,3)], plot_pcnm_transf[, 8]) #herb.abund.tot ~ PCNM3 + LPI + prec + PCNM1 + PCNM10
-plot(varpart.pa.len.tot)
-varpart.pa.len.tu<- varpart(len.pa.tu, plot_pcnm_transf[,c(6,3)], plot_pcnm_transf[, 8]) #herb.abund.tot ~ PCNM3 + LPI + prec + PCNM1 + PCNM10
-plot(varpart.pa.len.tu)
-
-anova(capscale(len.abund.tot ~ Condition(prec) + PCNM1, data = plot_pcnm_transf))
-anova(capscale(len.abund.tot ~ prec + Condition(PCNM1), data = plot_pcnm_transf))
-varpart.abund.len.tot<- varpart(len_abund_hell, plot_pcnm_transf[,6], plot_pcnm_transf[,8]) #len.abund.tot ~ prec + PCNM1
-plot(varpart.abund.len.tot)
-
-anova(capscale(len.abund.tu ~ Condition(WEI + prec) + PCNM1 + PCNM5, data = plot_pcnm_transf))
-anova(capscale(len.abund.tu ~ WEI  + Condition(PCNM1 + PCNM5+ prec), data = plot_pcnm_transf))
-anova(capscale(len.abund.tu ~  prec + Condition(PCNM1 + PCNM5+ WEI), data = plot_pcnm_transf))
-varpart.abund.len.tu<- varpart(len_abund_hell,plot_pcnm_transf[,3] ,plot_pcnm_transf[,6], plot_pcnm_transf[,c(8, 12)]) #len.abund.tu ~ WEI + prec + PCNM1 + PCNM5
-plot(varpart.abund.len.tu)
-
-anova(capscale(len.abund.ne ~ Condition(WEI + prec) + PCNM3, data = plot_pcnm_transf))
-anova(capscale(len.abund.ne ~ WEI  + Condition(PCNM3+ prec), data = plot_pcnm_transf))
-anova(capscale(len.abund.ne ~  prec + Condition(PCNM3 + WEI), data = plot_pcnm_transf))
-varpart.abund.len.ne<- varpart(len_abund_hell,plot_pcnm_transf[,3] ,plot_pcnm_transf[,6], plot_pcnm_transf[,10]) #len.abund.tu ~ WEI + prec + PCNM1 + PCNM5
-plot(varpart.abund.len.ne)
 
 #varpart.abund.len.ne<- not possible to do a partioning for it is explained only by geographic variation (PCNM3)
 
@@ -340,34 +276,7 @@ sum(w$boot.coefs[,1] > x$boot.coefs[,1])/1000
 sum(w$boot.coefs[,2] > x$boot.coefs[,2])/1000
 
 # Mon Dec 02 16:14:13 2019 ------------------------------
-#table of percentage of explaned variance by each variable
-group<- c(rep.int("herb", times = 3),rep.int("len", times = 3))
-frac<- c(rep(c("total", "turn", "nest"), times = 2))
-disturb<- c(0.08, 0.07, 0, 0, 0.06, 0)
-prec<- c(0.05, 0.05, 0, 0.05, 0.06, 0)
-space<- c(0.13, 0.09, 1, 0.08, 0.06, 1) 
-perc_var<- data.frame(group, frac, disturb, prec, space)
-perc_var<- mutate(perc_var, total = disturb + prec + space)
-
-#barplot of percentage of explaned variance by each variable
-perc_var2<- pivot_longer(data = perc_var[,-6], cols = c(disturb, prec, space),  names_to= "value",
-             names_repair = "unique")
-perc_var2$frac<- factor(perc_var2$frac, ordered = T, levels = c("total", "turn", "nest"))
-facet_label<- c("total" = "Total Beta-diversity",
-                  "turn" = "Turnover",
-                  "nest" = "Nestedness")
-facet_label<- as_labeller(facet_label)
-
-vp_bars<- ggplot(perc_var2, aes(x=group, y=value...4, fill = value...3))+
-  geom_bar(stat = "identity", position = "fill", width = 0.8)+
-  facet_grid(cols = vars(frac), switch = "x", labeller = as_labeller(facet_label))+
-  scale_y_continuous(name = "% of each variable in R?adj", labels = c("0","25", "50", "75", "100"))+
-  scale_x_discrete(name = "", labels = c("Herbaceous", "Wood"))+
-  scale_fill_hue(name = "" , labels = c("Disturbance", "Precipitation", "Space"))+
-  theme(panel.spacing.x = unit(0, "lines"), panel.background = element_blank(),
-        axis.line.y = element_line(colour = "grey"))
-print(vp_bars)
-ggsave("vp_bars.jpg", plot = vp_bars)        
+        
 
 # Thu Dec 05 16:16:07 2019 ------------------------------
 # Decay model in ggplot2####
