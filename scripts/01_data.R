@@ -67,10 +67,6 @@ decay.pa.len.gmdi <- decay.model(y = len.pa.tu,  x = dist.gmdi, model.type = "ex
 
 #Decay models - interaction#####
 #abundance
-decay.abund.herb.precL<-decay.model(y = herb.abund.tu, x = dist.prec.transf*dist.LPI.transf,  model.type = "exponential", y.type = "dissimilarities")
-decay.abund.len.precL<- decay.model(y = len.abund.tu,  x = dist.prec.transf*dist.LPI.transf,  model.type = "exponential", y.type = "dissimilarities")
-decay.abund.herb.precW<-decay.model(y = herb.abund.tu, x = dist.prec.transf*dist.wei.transf,  model.type = "exponential", y.type = "dissimilarities")
-decay.abund.len.precW<- decay.model(y = len.abund.tu,  x = dist.prec.transf*dist.wei.transf,  model.type = "exponential", y.type = "dissimilarities")
 decay.abund.herb.precG< decay.model(y = herb.abund.tu, x = dist.prec.transf*dist.gmdi.transf, model.type = "exponential", y.type = "dissimilarities")
 decay.abund.len.precG<- decay.model(y = len.abund.tu,  x = dist.prec.transf*dist.gmdi.transf, model.type = "exponential", y.type = "dissimilarities")
 
