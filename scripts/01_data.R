@@ -2,22 +2,22 @@
 # Script para importar e organizar os dados necessários para as análises
 
 
-#libraries####
+#libraries----
 library(readxl)
 library(geosphere)
 library(vegan)
-
+library(here)
 
 #data####
-read_xlsx("exp_pp_sem_P7.xlsx")-> plot
-read_xlsx("herbáceas_pp.xlsx") -> herb
-read_xlsx("lenhosas_pp.xlsx") -> len
+read_xlsx("data/exp_pp_sem_P7.xlsx")-> plot
+read_xlsx("data/herbáceas_pp.xlsx") -> herb
+read_xlsx("data/lenhosas_pp.xlsx") -> len
 
 
 #PCNMs####
-mat_dist<- distm(plot[,c('lon','lat')], plot[,c('lon','lat')], fun=distVincentyEllipsoid)
-pcnms<- pcnm(mat_dist)
-plot_pcnm<- cbind(plot, pcnms$vectors)
+distm(plot[,c('lon','lat')], plot[,c('lon','lat')], fun=distVincentyEllipsoid) -> mat_dist
+pcnm(mat_dist) -> pcnms
+cbind(plot, pcnms$vectors) -> plot_pcnm
 
 #data transformation####
 decostand(plot_pcnm[, -c(1:3)], 'standardize') -> plot_pcnm_transf #Faz sentido padronizar as PCNM's? Elas não perderiam a representação da variação espacial dessa forma?
