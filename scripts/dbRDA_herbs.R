@@ -9,9 +9,20 @@ library(vegan)
 read_xlsx("data/exp_pp_sem_P7.xlsx")-> plot
 read_xlsx("data/herbáceas_pp.xlsx") -> herb
 
+##PCNMs----
+distm(plot[,c('lon','lat')], plot[,c('lon','lat')], fun=distVincentyEllipsoid) -> mat_dist
+pcnm(mat_dist) -> pcnms
+cbind(plot, pcnms$vectors) -> plot_pcnm
+
 ##data transformation----
 decostand(plot_pcnm[, -c(1:3)], 'standardize') -> plot_pcnm_transf #Faz sentido padronizar as PCNM's? Elas não perderiam a representação da variação espacial dessa forma?
 decostand(herb[,-c(1,59)], 'hellinger')-> herb_abund_hell
+
+##Herb - dbRDA data----
+beta.pair.abund(herb_abund_hell) -> herb.pair.abund
+herb.pair.abund$beta.bray -> herb.abund.tot
+herb.pair.abund$beta.bray.bal -> herb.abund.tu
+herb.pair.abund$beta.bray.gra -> herb.abund.ne
 
 # dbRDA Analysis ----
 ## bray-curtir dissimilarity index----
@@ -94,5 +105,6 @@ capscale(herb.abund.ne ~
          data = plot_pcnm_transf) -> mod.herb.abund.ne
 anova(mod.herb.abund.ne)
 RsquareAdj(mod.herb.abund.ne)
+
 plot(mod.herb.abund.ne)
 summary(mod.herb.abund.ne)

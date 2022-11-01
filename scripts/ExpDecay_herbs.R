@@ -3,6 +3,11 @@
 
 #libraries----
 #data----
+
+##PCNMs----
+distm(plot[,c('lon','lat')], plot[,c('lon','lat')], fun=distVincentyEllipsoid) -> mat_dist
+pcnm(mat_dist) -> pcnms
+cbind(plot, pcnms$vectors) -> plot_pcnm
 #Analysis----
 
 #Exponential decay models ----
