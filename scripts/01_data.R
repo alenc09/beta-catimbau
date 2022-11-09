@@ -19,22 +19,11 @@ distm(plot[,c('lon','lat')], plot[,c('lon','lat')], fun=distVincentyEllipsoid) -
 pcnm(mat_dist) -> pcnms
 cbind(plot, pcnms$vectors) -> plot_pcnm
 
-#data transformation####
-decostand(plot_pcnm[, -c(1:3)], 'standardize') -> plot_pcnm_transf #Faz sentido padronizar as PCNM's? Elas não perderiam a representação da variação espacial dessa forma?
-decostand(herb[,-c(1,59)], 'hellinger')-> herb_abund_hell
-decostand(len[-3,-1], 'hellinger') -> len_abund_hell
 
-##Herb - dbRDA data----
-beta.pair.abund(herb_abund_hell) -> herb.pair.abund
-herb.pair.abund$beta.bray -> herb.abund.tot
-herb.pair.abund$beta.bray.bal -> herb.abund.tu
-herb.pair.abund$beta.bray.gra -> herb.abund.ne
 
-##Lenhosas - dbRDA data----
-beta.pair.abund(len_abund_hell) ->len.pair.abund
-len.pair.abund$beta.bray ->len.abund.tot
-len.pair.abund$beta.bray.bal -> len.abund.tu
-len.pair.abund$beta.bray.gra ->len.abund.ne
+
+
+
 
 
 #Lenhosas
