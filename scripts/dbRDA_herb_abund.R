@@ -2,8 +2,11 @@
 #script para análises usando dados de abundância
 
 #libraries----
-library(betapart)
+library(readxl)
+library(dplyr)
+library(geosphere)
 library(vegan)
+library(betapart)
 
 #data----
 read_xlsx("data/exp_pp_sem_P7.xlsx")-> plot
@@ -18,24 +21,24 @@ cbind(plot, pcnms$vectors) -> plot_pcnm
 decostand(plot_pcnm[, -c(1:3)], 'standardize') -> plot_pcnm_transf #Faz sentido padronizar as PCNM's? Elas não perderiam a representação da variação espacial dessa forma?
 decostand(herb[,-c(1,59)], 'hellinger')-> herb_abund_hell
 
-##Herb - dbRDA data----
+#Analysis----
+##dbRDA data----
 beta.pair.abund(herb_abund_hell) -> herb.pair.abund
 herb.pair.abund$beta.bray -> herb.abund.tot
 herb.pair.abund$beta.bray.bal -> herb.abund.tu
 herb.pair.abund$beta.bray.gra -> herb.abund.ne
 
-# dbRDA Analysis ----
-## bray-curtir dissimilarity index----
-vegdist(herb[,-c(1,59)], method = "bray") -> brayDiss_herb
-range(brayDiss_herb)
-
-## Herbs----
+## dbRDA ----
 set.seed(123)
 rda(herb_abund_hell ~ ., data = plot_pcnm_transf) -> modT.abund.herb #base model with all variabels
 vif.cca(modT.abund.herb)
+
 rda(
   herb_abund_hell ~ 
+    PPI +
     LPI +
+    #WEI +#no theoretical sense to add
+    #alt + "highest VIF
     prec +
     fert_sol +
     PCNM1 +
@@ -62,10 +65,7 @@ ordistep(
   pstep = 1000
 ) 
 
-capscale(herb.abund.tot ~ 
-           PCNM3 + 
-           LPI + 
-           prec, 
+capscale(herb.abund.tot ~ PCNM3 + LPI + prec + PCNM1 + PCNM10, 
          plot_pcnm_transf) -> mod.herb.abund.tot #model with variables selected by stepwise selection
 anova(mod.herb.abund.tot)
 RsquareAdj(mod.herb.abund.tot)
@@ -80,11 +80,7 @@ ordistep(
   pstep = 1000
 )
 
-capscale(herb.abund.tu ~ 
-           PCNM3 + 
-           prec +
-           PCNM5 +
-           PCNM1, 
+capscale(herb.abund.tu ~ PCNM3 + prec + LPI + PCNM1 + PCNM10, 
          data = plot_pcnm_transf) -> mod.herb.abund.tu #model with variables selected by stepwise selection
 
 anova(mod.herb.abund.tu)
@@ -98,13 +94,8 @@ ordistep(
   direction = 'both',
   pstep = 1000
 )
-capscale(herb.abund.ne ~ 
-           PCNM3 + 
-           PCNM7 +
-           PCNM8,
+capscale(herb.abund.ne ~ PCNM3 + PCNM7,
          data = plot_pcnm_transf) -> mod.herb.abund.ne
 anova(mod.herb.abund.ne)
 RsquareAdj(mod.herb.abund.ne)
 
-plot(mod.herb.abund.ne)
-summary(mod.herb.abund.ne)
