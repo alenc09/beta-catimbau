@@ -60,11 +60,13 @@ ggplot(perc_var2, aes(x = group, y = value_rsqr, fill = source)) +
     axis.line.y = element_line(colour = "grey")
   ) -> vp_bars
                       
-ggsave("/home/lucas/Documentos/Doutorado/projetos_paralelos/artigo_a-b/manuscript/figures/fig1.jpg", plot = vp_bars)
+#ggsave("/home/lucas/Documentos/Doutorado/projetos_paralelos/artigo_a-b/manuscript/figures/fig1.jpg", plot = vp_bars)
 
 #Exponential decays----
 ##table for Figures----
 ### Variables matrices----
+source(file = here("scripts/ExpDecay_herb_abund.R"))
+source(file = here("scripts/ExpDecay_wood_abund.R"))
 prec.dist.mat<- as.matrix(dist.prec) 
 prec.dist.mat[upper.tri(prec.dist.mat, diag=T)]<-NA
 prec.dist.melt<- drop_na(as_tibble(melt(prec.dist.mat)))
@@ -88,9 +90,6 @@ precW.dist.mat[upper.tri(precW.dist.mat, diag=T)]<-NA
 precW.dist.melt<- drop_na(as_tibble(melt(precW.dist.mat)))
 
 ### species dissimilarity matrices----
-source(file = here("scripts/ExpDecay_herb_abund.R"))
-source(file = here("scripts/ExpDecay_wood_abund.R"))
-
 herb.mat.tu<-as.matrix(herb.abund.tu)
 herb.mat.tu[upper.tri(herb.mat.tu,diag=T)]<-NA
 herb.melt.tu<- drop_na(as_tibble(melt(herb.mat.tu)))
