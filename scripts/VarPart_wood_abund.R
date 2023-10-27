@@ -2,9 +2,19 @@
 #Script for variation partitioning analysis in woody plants dataset
 
 #libraries----
+library(readxl)
+library(geosphere)
+library(vegan)
+library(betapart)
+
 #data----
 read_xlsx("data/lenhosas_pp.xlsx") -> len
 read_xlsx("data/exp_pp_sem_P7.xlsx")-> plot
+
+##PCNMs----
+distm(plot[,c('lon','lat')], plot[,c('lon','lat')], fun=distVincentyEllipsoid) -> mat_dist
+pcnm(mat_dist) -> pcnms
+cbind(plot, pcnms$vectors) -> plot_pcnm
 
 #data transformation####
 decostand(plot_pcnm[, -c(1:3)], 'standardize') -> plot_pcnm_transf #Faz sentido padronizar as PCNM's? Elas não perderiam a representação da variação espacial dessa forma?
