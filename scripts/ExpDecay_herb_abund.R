@@ -4,6 +4,7 @@
 #libraries----
 library(readxl)
 library(dplyr)
+library(tidyr)
 library(geosphere)
 library(vegan)
 library(betapart)
@@ -13,15 +14,15 @@ library(reshape2)
 read_xlsx("data/exp_pp_sem_P7.xlsx")-> plot
 read_xlsx("data/herbáceas_pp.xlsx") -> herb
 
-##data transformation----
-decostand(plot_pcnm[, -c(1:3)], 'standardize') -> plot_pcnm_transf 
-decostand(herb[,-c(1,59)], 'hellinger')-> herb_abund_hell
-
 #Analysis----
 ##PCNMs----
 distm(plot[,c('lon','lat')], plot[,c('lon','lat')], fun=distVincentyEllipsoid) -> mat_dist
 pcnm(mat_dist) -> pcnms
 cbind(plot, pcnms$vectors) -> plot_pcnm
+
+##data transformation----
+decostand(plot_pcnm[, -c(1:3)], 'standardize') -> plot_pcnm_transf 
+decostand(herb[,-c(1,59)], 'hellinger')-> herb_abund_hell
 
 #Exponential decay models ----
 ##distance matrices ----
@@ -115,11 +116,6 @@ decay.model(
 ) -> decay.abund.herb.precW.ne
 
 #Figures----
-##pivot long the matrices----
-### species dissimilarity matrices----
-herb.mat.tu<-as.matrix(herb.abund.tu)
-herb.mat.tu[upper.tri(herb.mat.tu,diag=T)]<-NA
-herb.melt.tu<- drop_na(as_tibble(melt(herb.mat.tu)))
 
 ### Variables matrices----
 prec.dist.mat<- as.matrix(dist.prec) 
