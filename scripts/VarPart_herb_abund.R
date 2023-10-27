@@ -2,6 +2,10 @@
 #Script for variation partitioning analysis in herbaceus dataset
 
 #libraries----
+library(readxl)
+library(geosphere)
+library(vegan)
+library(betapart)
 
 #data----
 read_xlsx("data/exp_pp_sem_P7.xlsx")-> plot
