@@ -94,3 +94,35 @@ decay.model(
   model.type = "exponential",
   y.type = "dissimilarities"
 ) -> decay.abund.herb.precW.ne
+
+#Figures----
+##pivot long the matrices----
+### species dissimilarity matrices----
+herb.mat.tu<-as.matrix(herb.abund.tu)
+herb.mat.tu[upper.tri(herb.mat.tu,diag=T)]<-NA
+herb.melt.tu<- drop_na(as_tibble(melt(herb.mat.tu)))
+
+
+
+### Variables matrices----
+prec.dist.mat<- as.matrix(dist.prec) 
+prec.dist.mat[upper.tri(prec.dist.mat, diag=T)]<-NA
+prec.dist.melt<- drop_na(as_tibble(melt(prec.dist.mat)))
+
+lpi.dist.mat<- as.matrix(dist.LPI)
+lpi.dist.mat[upper.tri(lpi.dist.mat, diag=T)]<-NA
+lpi.dist.melt<- drop_na(as_tibble(melt(lpi.dist.mat)))
+
+wei.dist.mat<- as.matrix(dist.wei)
+wei.dist.mat[upper.tri(wei.dist.mat, diag=T)]<-NA
+wei.dist.melt<- drop_na(as_tibble(melt(wei.dist.mat)))
+
+precL.dist.mat<- dist.prec.transf*dist.LPI.transf
+precL.dist.mat<- as.matrix(precL.dist.mat)
+precL.dist.mat[upper.tri(precL.dist.mat, diag=T)]<-NA
+precL.dist.melt<- drop_na(as_tibble(melt(precL.dist.mat)))
+
+precW.dist.mat<- dist.prec.transf*dist.wei.transf
+precW.dist.mat<- as.matrix(precW.dist.mat)
+precW.dist.mat[upper.tri(precW.dist.mat, diag=T)]<-NA
+precW.dist.melt<- drop_na(as_tibble(melt(precW.dist.mat)))
