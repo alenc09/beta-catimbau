@@ -28,7 +28,7 @@ herb.pair.abund$beta.bray.gra -> herb.abund.ne
 
 #Analysis----
 ## herbs ----
-### total bet-diversity ----
+### total beta-diversity ----
 anova(capscale(
   herb.abund.tot ~ 
     PCNM3 +

@@ -56,7 +56,7 @@ wood %>%
   rename(total = `Total Geral`) %>% 
   glimpse -> wood
 
-decostand(wood[,-c(1,59)], 'hellinger') -> wood_hell #First line is the column names and 59 is the total abundance of each site
+decostand(wood[,-c(1,59)], 'hellinger') -> wood_hell #First column is the plot names and 59 is the total abundance of each site
 
 beta.pair.abund(wood_hell, index.family = "bray")-> wood.bray #bray-curtis dissimilarity index
 wood.bray$beta.bray -> wood.beta.tot #total beta-diversity
