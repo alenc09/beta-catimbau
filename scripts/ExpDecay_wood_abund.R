@@ -44,7 +44,7 @@ decay.model(
   y = wood.abund.tu,
   x = dist.prec,
   model.type = "exponential",
-  y.type = "similarities"
+  y.type = "dissimilarities"
 ) -> decay.abund.wood.prec
 
 
@@ -52,7 +52,7 @@ decay.model(
   y = wood.abund.tu,
   x = dist.LPI,
   model.type = "exponential",
-  y.type = "similarities"
+  y.type = "dissimilarities"
 ) -> decay.abund.wood.lpi
 
 
@@ -60,21 +60,21 @@ decay.model(
   y = wood.abund.tu,
   x = dist.wei,
   model.type = "exponential",
-  y.type = "similarities"
+  y.type = "dissimilarities"
 ) -> decay.abund.wood.wei
 
 decay.model(
   y = wood.abund.tu,
   x = dist.prec.transf * dist.LPI.transf,
   model.type = "exponential",
-  y.type = "similarities"
+  y.type = "dissimilarities"
 ) -> decay.abund.wood.precL
 
 decay.model(
   y = wood.abund.tu,
   x = dist.prec.transf * dist.wei.transf,
   model.type = "exponential",
-  y.type = "similarities"
+  y.type = "dissimilarities"
 ) -> decay.abund.wood.precW
 
 ### nestedness ----
@@ -82,33 +82,33 @@ decay.model(
   y = wood.abund.ne,
   x = dist.prec,
   model.type = "exponential",
-  y.type = "similarities"
+  y.type = "dissimilarities"
 ) -> decay.abund.wood.prec.ne
 
 decay.model(
   y = wood.abund.ne,
   x = dist.LPI,
   model.type = "exponential",
-  y.type = "similarities"
+  y.type = "dissimilarities"
 ) -> decay.abund.wood.lpi.ne
 
 decay.model(
   y = wood.abund.ne,
   x = dist.wei,
   model.type = "exponential",
-  y.type = "similarities"
+  y.type = "dissimilarities"
 ) -> decay.abund.wood.wei.ne
 
 decay.model(
   y = wood.abund.ne,
   x = dist.prec.transf * dist.LPI.transf,
   model.type = "exponential",
-  y.type = "similarities"
+  y.type = "dissimilarities"
 ) -> decay.abund.wood.precL.ne
 
 decay.model(
   y = wood.abund.ne,
   x = dist.prec.transf * dist.wei.transf,
   model.type = "exponential",
-  y.type = "similarities"
+  y.type = "dissimilarities"
 ) -> decay.abund.wood.precW.ne

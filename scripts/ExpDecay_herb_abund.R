@@ -48,35 +48,38 @@ decay.model(
   y = herb.abund.tu,
   x = dist.prec,
   model.type = "exponential",
-  y.type = "similarities"
+  y.type = "dissimilarities"
 ) -> decay.abund.herb.prec
+
+plot(decay.abund.herb.prec)
+plot(decay.abund.wood.prec, add = T, pty = 2)
 
 decay.model(
   y = herb.abund.tu,
   x = dist.LPI,
   model.type = "exponential",
-  y.type = "similarities"
+  y.type = "dissimilarities"
 ) -> decay.abund.herb.lpi
 
 decay.model(
   y = herb.abund.tu,
   x = dist.wei,
   model.type = "exponential",
-  y.type = "similarities"
+  y.type = "dissimilarities"
 ) -> decay.abund.herb.wei
 
 decay.model(
   y = herb.abund.tu,
   x = dist.prec.transf * dist.LPI.transf,
   model.type = "exponential",
-  y.type = "similarities"
+  y.type = "dissimilarities"
 ) -> decay.abund.herb.precL
 
 decay.model(
   y = herb.abund.tu,
   x = dist.prec.transf * dist.wei.transf,
   model.type = "exponential",
-  y.type = "similarities"
+  y.type = "dissimilarities"
 ) -> decay.abund.herb.precW
 
 ### nestedness ----
@@ -84,35 +87,35 @@ decay.model(
   y = herb.abund.ne,
   x = dist.prec,
   model.type = "exponential",
-  y.type = "similarities"
+  y.type = "dissimilarities"
 ) -> decay.abund.herb.prec.ne
 
 decay.model(
   y = herb.abund.ne,
   x = dist.LPI,
   model.type = "exponential",
-  y.type = "similarities"
+  y.type = "dissimilarities"
 ) -> decay.abund.herb.lpi.ne
 
 decay.model(
   y = herb.abund.ne,
   x = dist.wei,
   model.type = "exponential",
-  y.type = "similarities"
+  y.type = "dissimilarities"
 ) -> decay.abund.herb.wei.ne
 
 decay.model(
   y = herb.abund.ne,
   x = dist.prec.transf * dist.LPI.transf,
   model.type = "exponential",
-  y.type = "similarities"
+  y.type = "dissimilarities"
 ) -> decay.abund.herb.precL.ne
 
 decay.model(
   y = herb.abund.ne,
   x = dist.prec.transf * dist.wei.transf,
   model.type = "exponential",
-  y.type = "similarities"
+  y.type = "dissimilarities"
 ) -> decay.abund.herb.precW.ne
 
 #Figures----

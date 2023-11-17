@@ -7,6 +7,8 @@ library(tidyr)
 library(ggplot2)
 library(here)
 library(reshape2)
+library(RColorBrewer)
+library(here)
 
 # Variation partitioning ----
 ## data table ---- #A tabela abaixo foi construida baseado nos resultados da partição da variância dos scripts VarPart_
@@ -50,44 +52,24 @@ ggplot(perc_var2, aes(x = group, y = value_rsqr, fill = source)) +
   scale_y_continuous(name = "% of each variable in R²adj",
                      labels = c("0", "25", "50", "75", "100")) +
   scale_x_discrete(name = "", labels = c("Herbaceous", "Wood")) +
-  scale_fill_viridis_d(
+  scale_fill_manual(
+    values = c("#738054","#a3a86d", "grey40","#be996e", "#a98e73"),
     name = "",
-    labels = c("LPI", "Precipitation", "Space", "Shared", "WEI")
+    labels = c("Precipitation", "Space", "Shared", "LPI", "WEI")
   ) +
   theme(
     panel.spacing.x = unit(0, "lines"),
     panel.background = element_blank(),
-    axis.line.y = element_line(colour = "grey")
+    axis.line.y = element_line(colour = "grey80")
   ) -> vp_bars
                       
-#ggsave("/home/lucas/Documentos/Doutorado/projetos_paralelos/artigo_a-b/manuscript/figures/fig1.jpg", plot = vp_bars)
+ggsave(here("figures/varpart.jpg"), plot = vp_bars)
 
 #Exponential decays----
 ##table for Figures----
 ### Variables matrices----
 source(file = here("scripts/ExpDecay_herb_abund.R"))
 source(file = here("scripts/ExpDecay_wood_abund.R"))
-prec.dist.mat<- as.matrix(dist.prec) 
-prec.dist.mat[upper.tri(prec.dist.mat, diag=T)]<-NA
-prec.dist.melt<- drop_na(as_tibble(melt(prec.dist.mat)))
-
-lpi.dist.mat<- as.matrix(dist.LPI)
-lpi.dist.mat[upper.tri(lpi.dist.mat, diag=T)]<-NA
-lpi.dist.melt<- drop_na(as_tibble(melt(lpi.dist.mat)))
-
-wei.dist.mat<- as.matrix(dist.wei)
-wei.dist.mat[upper.tri(wei.dist.mat, diag=T)]<-NA
-wei.dist.melt<- drop_na(as_tibble(melt(wei.dist.mat)))
-
-precL.dist.mat<- dist.prec.transf*dist.LPI.transf
-precL.dist.mat<- as.matrix(precL.dist.mat)
-precL.dist.mat[upper.tri(precL.dist.mat, diag=T)]<-NA
-precL.dist.melt<- drop_na(as_tibble(melt(precL.dist.mat)))
-
-precW.dist.mat<- dist.prec.transf*dist.wei.transf
-precW.dist.mat<- as.matrix(precW.dist.mat)
-precW.dist.mat[upper.tri(precW.dist.mat, diag=T)]<-NA
-precW.dist.melt<- drop_na(as_tibble(melt(precW.dist.mat)))
 
 ### species dissimilarity matrices----
 herb.mat.tu<-as.matrix(herb.abund.tu)
@@ -115,4 +97,55 @@ herb.melt.tu %>%
   rename("dist_prec.wei" = "value") %>%
   glimpse -> tab_dist_decay
 
-##figure----
+##figures----
+###precipitation distance----
+ggplot(data = tab_dist_decay) +
+  geom_point(aes(x = dist_prec, y = herb_tu, color = "herb_tu"),
+             alpha = 0.8)+
+  geom_smooth(aes(x = dist_prec, y = herb_tu),
+              method = "glm",
+              formula = y ~ x + I(x^2),
+              linetype = "dashed",
+              lwd = 1,
+              color = "#738054",
+              alpha = 0.2) +
+  geom_point(aes(x = dist_prec, y = wood_tu, color = "wood_tu"),
+             alpha = 0.8) +
+  geom_smooth(aes(x = dist_prec, y = wood_tu),
+              method = "glm",
+              formula = y ~ x + I(x^2),
+              linetype = "dashed",
+              lwd = 1,
+              color = "#aa722a",
+              alpha = 0.2)+
+  labs(x = "Precipitation distance", y = "Turnover")+
+  scale_color_manual(name = "", 
+                     labels = c("Herbaceous", "Wood"),
+                     values = c("herb_tu" = "#738054", "wood_tu" = "#aa722a"))+
+  theme_classic()
+
+###LPI distance----
+ggplot(data = tab_dist_decay) +
+  geom_point(aes(x = dist_lpi, y = herb_tu, color = "herb_tu"),
+             alpha = 0.8)+
+  geom_smooth(aes(x = dist_lpi, y = herb_tu),
+              method = "glm",
+              formula = y ~ x + I(x^2),
+              linetype = "dashed",
+              lwd = 1,
+              color = "#738054",
+              alpha = 0.2) +
+  geom_point(aes(x = dist_lpi, y = wood_tu, color = "wood_tu"),
+             alpha = 0.8) +
+  geom_smooth(aes(x = dist_lpi, y = wood_tu),
+              method = "glm",
+              formula = y ~ x + I(x^2),
+              linetype = "dashed",
+              lwd = 1,
+              color = "#aa722a",
+              alpha = 0.2)+
+  labs(x = "Livestock Pressure Index (distance)", y = "Turnover")+
+  scale_color_manual(name = "", 
+                     labels = c("Herbaceous", "Wood"),
+                     values = c("herb_tu" = "#738054", "wood_tu" = "#aa722a"))+
+  theme_classic()
