@@ -51,9 +51,6 @@ decay.model(
   y.type = "dissimilarities"
 ) -> decay.abund.herb.prec
 
-plot(decay.abund.herb.prec)
-plot(decay.abund.wood.prec, add = T, pty = 2)
-
 decay.model(
   y = herb.abund.tu,
   x = dist.LPI,

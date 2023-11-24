@@ -122,7 +122,7 @@ ggplot(data = tab_dist_decay) +
   scale_color_manual(name = "", 
                      labels = c("Herbaceous", "Wood"),
                      values = c("herb_tu" = "#738054", "wood_tu" = "#aa722a"))+
-  theme_classic()
+  theme_classic() -> prec_decay_fig
 
 ###LPI distance----
 ggplot(data = tab_dist_decay) +
@@ -148,4 +148,86 @@ ggplot(data = tab_dist_decay) +
   scale_color_manual(name = "", 
                      labels = c("Herbaceous", "Wood"),
                      values = c("herb_tu" = "#738054", "wood_tu" = "#aa722a"))+
-  theme_classic()
+  theme_classic() -> lpi_decay_fig
+
+###WEI distance----
+ggplot(data = tab_dist_decay) +
+  geom_point(aes(x = dist_wei, y = herb_tu, color = "herb_tu"),
+             alpha = 0.8)+
+  geom_smooth(aes(x = dist_wei, y = herb_tu),
+              method = "glm",
+              formula = y ~ x + I(x^2),
+              linetype = "dashed",
+              lwd = 1,
+              color = "#738054",
+              alpha = 0.2) +
+  geom_point(aes(x = dist_wei, y = wood_tu, color = "wood_tu"),
+             alpha = 0.8) +
+  geom_smooth(aes(x = dist_wei, y = wood_tu),
+              method = "glm",
+              formula = y ~ x + I(x^2),
+              linetype = "solid",
+              lwd = 1,
+              color = "#aa722a",
+              alpha = 0.2)+
+  labs(x = "Wood Extraction Index (distance)", y = "Turnover")+
+  scale_color_manual(name = "", 
+                     labels = c("Herbaceous", "Wood"),
+                     values = c("herb_tu" = "#738054", "wood_tu" = "#aa722a"))+
+  theme_classic() -> wei_decay_fig
+
+###prec*lpi distance----
+ggplot(data = tab_dist_decay) +
+  geom_point(aes(x = dist_prec.lpi, y = herb_tu, color = "herb_tu"),
+             alpha = 0.8)+
+  geom_smooth(aes(x = dist_prec.lpi, y = herb_tu),
+              method = "glm",
+              formula = y ~ x + I(x^2),
+              linetype = "dashed",
+              lwd = 1,
+              color = "#738054",
+              alpha = 0.2) +
+  geom_point(aes(x = dist_prec.lpi, y = wood_tu, color = "wood_tu"),
+             alpha = 0.8) +
+  geom_smooth(aes(x = dist_prec.lpi, y = wood_tu),
+              method = "glm",
+              formula = y ~ x + I(x^2),
+              linetype = "dashed",
+              lwd = 1,
+              color = "#aa722a",
+              alpha = 0.2)+
+  labs(x = "Precipitation and WEI interaction (distance) ", y = "Turnover")+
+  scale_color_manual(name = "", 
+                     labels = c("Herbaceous", "Wood"),
+                     values = c("herb_tu" = "#738054", "wood_tu" = "#aa722a"))+
+  theme_classic() -> prec.lpi_decay_fig
+
+###prec*wei distance----
+ggplot(data = tab_dist_decay) +
+  geom_point(aes(x = dist_prec.wei, y = herb_tu -1, color = "herb_tu"), #reduzi -1 da matriz para os pontos ficarem no mesmo lugar que a curva
+           alpha = 0.8)+
+  geom_smooth(aes(x = dist_prec.wei, y = herb_tu),
+            method = "nls", #Esse é o método utilizado para plotar uma curva exponencial
+            formula = y - 1 ~ a*exp(b*x), #reduzi -1 do y no modelo para a curva ficar em funcao da dissimilaridade. Foi o único jeito que encontrei de inverter a direcao da curva
+            method.args = list(start = c(a=1, b=0)), #especificacoes do modelo
+            se = F, #aparentemente nao da para plotar isso com o standar error do modelo
+            linetype = "dashed", #a linha tracejada é nao significativo
+            lwd = 1,
+            color = "#738054") +
+geom_point(aes(x = dist_prec.wei, y = wood_tu -1 , color = "wood_tu"), 
+           alpha = 0.8) +
+  geom_smooth(aes(x = dist_prec.wei, y = wood_tu),
+              method = "nls",
+              formula = y - 1 ~ a * exp(b * x), 
+              method.args = list(start = c(a = 1, b = 0)),
+              se = F,
+              linetype = "solid", #traecjado e significativo
+              lwd = 1,
+              color = "#aa722a")+
+  labs(x = "Precipitation and WEI interaction (distance) ", y = "Turnover")+
+  scale_color_manual(name = "",
+                     labels = c("Herbaceous", "Wood"),
+                     values = c("herb_tu" = "#738054", "wood_tu" = "#aa722a"))+
+  scale_y_continuous(breaks = c(-1, -0.8, -0.6,-0.4,-0.2,0), labels = c(0.0, 0.2, 0.4, 0.6, 0.8, 1))+ #modifiquei o label so para o valor de turnover ficar positivo no grafico como ele realmente eh
+  theme_classic() -> prec.wei_decay_fig
+
