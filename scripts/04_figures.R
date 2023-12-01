@@ -9,6 +9,8 @@ library(here)
 library(reshape2)
 library(RColorBrewer)
 library(here)
+library(cowplot)
+library(ggpubr)
 
 # Variation partitioning ----
 ## data table ---- #A tabela abaixo foi construida baseado nos resultados da partição da variância dos scripts VarPart_
@@ -100,25 +102,28 @@ herb.melt.tu %>%
 ##figures----
 ###precipitation distance----
 ggplot(data = tab_dist_decay) +
-  geom_point(aes(x = dist_prec, y = herb_tu, color = "herb_tu"),
-             alpha = 0.8)+
+  geom_point(aes(x = dist_prec, y = herb_tu - 1, color = "herb_tu"),
+             alpha = 0.4)+
   geom_smooth(aes(x = dist_prec, y = herb_tu),
-              method = "glm",
-              formula = y ~ x + I(x^2),
+              method = "nls",
+              formula = y - 1 ~ a*exp(b*x),
+              method.args = list(start = c(a=1, b=0)),
+              se = F,
               linetype = "dashed",
               lwd = 1,
-              color = "#738054",
-              alpha = 0.2) +
-  geom_point(aes(x = dist_prec, y = wood_tu, color = "wood_tu"),
-             alpha = 0.8) +
+              color = "#738054") +
+  geom_point(aes(x = dist_prec, y = wood_tu - 1, color = "wood_tu"),
+             alpha = 0.4) +
   geom_smooth(aes(x = dist_prec, y = wood_tu),
-              method = "glm",
-              formula = y ~ x + I(x^2),
+              method = "nls",
+              formula = y - 1 ~ a*exp(b*x),
+              method.args = list(start = c(a=1, b=0)),
+              se = F,
               linetype = "dashed",
               lwd = 1,
-              color = "#aa722a",
-              alpha = 0.2)+
-  labs(x = "Precipitation distance", y = "Turnover")+
+              color = "#aa722a")+
+  scale_y_continuous(breaks = c(-1, -0.8, -0.6,-0.4,-0.2,0), labels = c(0.0, 0.2, 0.4, 0.6, 0.8, 1))+ #modifiquei o label so para o valor de turnover ficar positivo no grafico como ele realmente é
+  labs(x = "Precipitation", y = "Abundance-based turnover")+
   scale_color_manual(name = "", 
                      labels = c("Herbaceous", "Wood"),
                      values = c("herb_tu" = "#738054", "wood_tu" = "#aa722a"))+
@@ -126,25 +131,28 @@ ggplot(data = tab_dist_decay) +
 
 ###LPI distance----
 ggplot(data = tab_dist_decay) +
-  geom_point(aes(x = dist_lpi, y = herb_tu, color = "herb_tu"),
-             alpha = 0.8)+
+  geom_point(aes(x = dist_lpi, y = herb_tu - 1, color = "herb_tu"),
+             alpha = 0.4)+
   geom_smooth(aes(x = dist_lpi, y = herb_tu),
-              method = "glm",
-              formula = y ~ x + I(x^2),
+              method = "nls",
+              formula = y - 1 ~ a*exp(b*x),
+              method.args = list(start = c(a=1, b=0)),
+              se = F,
               linetype = "dashed",
               lwd = 1,
-              color = "#738054",
-              alpha = 0.2) +
-  geom_point(aes(x = dist_lpi, y = wood_tu, color = "wood_tu"),
-             alpha = 0.8) +
+              color = "#738054") +
+  geom_point(aes(x = dist_lpi, y = wood_tu - 1, color = "wood_tu"),
+             alpha = 0.4) +
   geom_smooth(aes(x = dist_lpi, y = wood_tu),
-              method = "glm",
-              formula = y ~ x + I(x^2),
+              method = "nls",
+              formula = y - 1 ~ a*exp(b*x),
+              method.args = list(start = c(a=1, b=0)),
+              se = F,
               linetype = "dashed",
               lwd = 1,
-              color = "#aa722a",
-              alpha = 0.2)+
-  labs(x = "Livestock Pressure Index (distance)", y = "Turnover")+
+              color = "#aa722a")+
+  labs(x = "Livestock Pressure Index", y = "")+
+  scale_y_continuous(breaks = c(-1, -0.8, -0.6,-0.4,-0.2,0), labels = c(0.0, 0.2, 0.4, 0.6, 0.8, 1))+
   scale_color_manual(name = "", 
                      labels = c("Herbaceous", "Wood"),
                      values = c("herb_tu" = "#738054", "wood_tu" = "#aa722a"))+
@@ -152,25 +160,28 @@ ggplot(data = tab_dist_decay) +
 
 ###WEI distance----
 ggplot(data = tab_dist_decay) +
-  geom_point(aes(x = dist_wei, y = herb_tu, color = "herb_tu"),
-             alpha = 0.8)+
+  geom_point(aes(x = dist_wei, y = herb_tu - 1, color = "herb_tu"),
+             alpha = 0.4)+
   geom_smooth(aes(x = dist_wei, y = herb_tu),
-              method = "glm",
-              formula = y ~ x + I(x^2),
+              method = "nls",
+              formula = y - 1 ~ a*exp(b*x),
+              method.args = list(start = c(a=1, b=0)),
+              se = F,
               linetype = "dashed",
               lwd = 1,
-              color = "#738054",
-              alpha = 0.2) +
-  geom_point(aes(x = dist_wei, y = wood_tu, color = "wood_tu"),
-             alpha = 0.8) +
+              color = "#738054") +
+  geom_point(aes(x = dist_wei, y = wood_tu - 1, color = "wood_tu"),
+             alpha = 0.4) +
   geom_smooth(aes(x = dist_wei, y = wood_tu),
-              method = "glm",
-              formula = y ~ x + I(x^2),
+              method = "nls",
+              formula = y - 1 ~ a*exp(b*x),
+              method.args = list(start = c(a=1, b=0)),
+              se = F,
               linetype = "solid",
               lwd = 1,
-              color = "#aa722a",
-              alpha = 0.2)+
-  labs(x = "Wood Extraction Index (distance)", y = "Turnover")+
+              color = "#aa722a")+
+  labs(x = "Wood Extraction Index", y = "")+
+  scale_y_continuous(breaks = c(-1, -0.8, -0.6,-0.4,-0.2,0), labels = c(0.0, 0.2, 0.4, 0.6, 0.8, 1))+
   scale_color_manual(name = "", 
                      labels = c("Herbaceous", "Wood"),
                      values = c("herb_tu" = "#738054", "wood_tu" = "#aa722a"))+
@@ -178,25 +189,28 @@ ggplot(data = tab_dist_decay) +
 
 ###prec*lpi distance----
 ggplot(data = tab_dist_decay) +
-  geom_point(aes(x = dist_prec.lpi, y = herb_tu, color = "herb_tu"),
-             alpha = 0.8)+
+  geom_point(aes(x = dist_prec.lpi, y = herb_tu - 1, color = "herb_tu"),
+             alpha = 0.4)+
   geom_smooth(aes(x = dist_prec.lpi, y = herb_tu),
-              method = "glm",
-              formula = y ~ x + I(x^2),
+              method = "nls",
+              formula = y - 1 ~ a*exp(b*x),
+              method.args = list(start = c(a=1, b=0)),
+              se = F,
               linetype = "dashed",
               lwd = 1,
-              color = "#738054",
-              alpha = 0.2) +
-  geom_point(aes(x = dist_prec.lpi, y = wood_tu, color = "wood_tu"),
-             alpha = 0.8) +
+              color = "#738054") +
+  geom_point(aes(x = dist_prec.lpi, y = wood_tu - 1, color = "wood_tu"),
+             alpha = 0.4) +
   geom_smooth(aes(x = dist_prec.lpi, y = wood_tu),
-              method = "glm",
-              formula = y ~ x + I(x^2),
+              method = "nls",
+              formula = y - 1 ~ a*exp(b*x),
+              method.args = list(start = c(a=1, b=0)),
+              se = F,
               linetype = "dashed",
               lwd = 1,
-              color = "#aa722a",
-              alpha = 0.2)+
-  labs(x = "Precipitation and WEI interaction (distance) ", y = "Turnover")+
+              color = "#aa722a")+
+  scale_y_continuous(breaks = c(-1, -0.8, -0.6,-0.4,-0.2,0), labels = c(0.0, 0.2, 0.4, 0.6, 0.8, 1))+
+  labs(x = "Precipitation and LPI interaction", y = "Abundance-based turnover")+
   scale_color_manual(name = "", 
                      labels = c("Herbaceous", "Wood"),
                      values = c("herb_tu" = "#738054", "wood_tu" = "#aa722a"))+
@@ -205,7 +219,7 @@ ggplot(data = tab_dist_decay) +
 ###prec*wei distance----
 ggplot(data = tab_dist_decay) +
   geom_point(aes(x = dist_prec.wei, y = herb_tu -1, color = "herb_tu"), #reduzi -1 da matriz para os pontos ficarem no mesmo lugar que a curva
-           alpha = 0.8)+
+           alpha = 0.4)+
   geom_smooth(aes(x = dist_prec.wei, y = herb_tu),
             method = "nls", #Esse é o método utilizado para plotar uma curva exponencial
             formula = y - 1 ~ a*exp(b*x), #reduzi -1 do y no modelo para a curva ficar em funcao da dissimilaridade. Foi o único jeito que encontrei de inverter a direcao da curva
@@ -215,19 +229,48 @@ ggplot(data = tab_dist_decay) +
             lwd = 1,
             color = "#738054") +
 geom_point(aes(x = dist_prec.wei, y = wood_tu -1 , color = "wood_tu"), 
-           alpha = 0.8) +
+           alpha = 0.4) +
   geom_smooth(aes(x = dist_prec.wei, y = wood_tu),
               method = "nls",
               formula = y - 1 ~ a * exp(b * x), 
               method.args = list(start = c(a = 1, b = 0)),
               se = F,
-              linetype = "solid", #traecjado e significativo
+              linetype = "solid", #linha solida é significativo
               lwd = 1,
               color = "#aa722a")+
-  labs(x = "Precipitation and WEI interaction (distance) ", y = "Turnover")+
+  labs(x = "Precipitation and WEI interaction", y = "")+
   scale_color_manual(name = "",
                      labels = c("Herbaceous", "Wood"),
                      values = c("herb_tu" = "#738054", "wood_tu" = "#aa722a"))+
   scale_y_continuous(breaks = c(-1, -0.8, -0.6,-0.4,-0.2,0), labels = c(0.0, 0.2, 0.4, 0.6, 0.8, 1))+ #modifiquei o label so para o valor de turnover ficar positivo no grafico como ele realmente eh
-  theme_classic() -> prec.wei_decay_fig
+  theme_classic()+
+  theme(legend.text = element_text(size = 12)) -> prec.wei_decay_fig
+
+get_legend(prec.wei_decay_fig) %>% 
+  as_ggplot() -> lengend_panel
+
+###Panel----
+ggarrange(prec_decay_fig, lpi_decay_fig, wei_decay_fig, prec.lpi_decay_fig, prec.wei_decay_fig, lengend_panel,
+          labels = c("a", "b", "c", "d", "e", ""),
+          common.legend = T,
+          legend = "none"
+          ) -> fig.decay
+
+ggsave(filename = here("figures/fig.decay.jpg"),
+       plot = fig.decay,
+       dpi = 300,
+       width = 11.5)
+
+#turnover profile----
+c(seq(1:19)) -> number
+c("P02", "P04", "P08", "P10", "P11", "P14", "P15", "P16", "P17", "P20", "P21", "P22", "P23", "P25", "P26", "P27", "P28", "P29", "P30") -> plot
+condicoes2 <- purrr::map2(number, plot, ~quo(Var2 == !!.x ~ !!.y))
+condicoes2 <- c(condicoes2, quo(TRUE ~ as.character(Var2)))
+condicoes1 <- purrr::map2(number, plot, ~quo(Var1 == !!.x ~ !!.y))
+condicoes1 <- c(condicoes1, quo(TRUE ~ as.character(Var1)))
+
+tab_dist_decay %>% 
+  mutate(Var2 = case_when(!!!condicoes2),
+         Var1 = case_when(!!!condicoes1)) %>%
+  glimpse -> tab_dist_plot
 
